@@ -6,8 +6,8 @@ export default function HeroScrub() {
   return (
     <ScrollScrubVideo
       sources={[
-        { src: '/video/placeholder.webm', type: 'video/webm' },
-        { src: '/video/placeholder.mp4', type: 'video/mp4' },
+        { src: '/video/hero-bbq.webm', type: 'video/webm' },
+        { src: '/video/hero-bbq.mp4', type: 'video/mp4' },
       ]}
       scrollLength="300%"
     >
