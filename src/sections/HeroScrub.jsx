@@ -6,6 +6,9 @@ const MAPS_URL = 'https://maps.app.goo.gl/mby1ioZjPMrW7xSG6'
 const BURGER_URL = 'https://bbq-canencia.lovable.app/'
 const INSTAGRAM_URL = 'https://www.instagram.com/gonsastrez/'
 
+// Scroll-progress centers of each text scene — where the snap magnet rests.
+const SNAP_POINTS = [0, 0.39, 0.7, 1]
+
 // 0 below `from`, 1 above `to`, eased in between — for mapping scroll
 // progress ranges onto opacity without hard cuts.
 function fade(progress, from, to) {
@@ -64,6 +67,7 @@ export default function HeroScrub() {
       poster="/video/hero-poster.jpg"
       scrollLength="450%"
       onProgress={handleProgress}
+      snapPoints={SNAP_POINTS}
     >
       <div ref={titleRef} className="hero__scene">
         <h1 className="hero__title">

@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { getLenis } from './useSmoothScroll.js'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -15,12 +16,15 @@ export default function ScrollScrubVideo({
   scrollLength = '300%',
   className = '',
   onProgress,
+  snapPoints,
   children,
 }) {
   const containerRef = useRef(null)
   const videoRef = useRef(null)
   const onProgressRef = useRef(onProgress)
   onProgressRef.current = onProgress
+  const snapPointsRef = useRef(snapPoints)
+  snapPointsRef.current = snapPoints
 
   useEffect(() => {
     const video = videoRef.current
@@ -28,10 +32,43 @@ export default function ScrollScrubVideo({
     if (!video || !container) return
 
     let scrollTrigger
+    let snapTimer
 
     const createScrollTrigger = () => {
       const duration = video.duration
       if (!duration || !isFinite(duration)) return
+
+      // Gently magnetize the scroll toward the nearest text scene once
+      // the user lets go. Animated through Lenis itself — ScrollTrigger's
+      // built-in snap writes scroll positions directly and fights Lenis.
+      const snapToNearest = () => {
+        const st = scrollTrigger
+        const points = snapPointsRef.current
+        if (!st || !points?.length) return
+        const lenis = getLenis()
+        // Still gliding (inertia tail) — check again shortly instead of
+        // yanking the scroll away from where the glide would land.
+        if (lenis && Math.abs(lenis.velocity) > 0.05) {
+          clearTimeout(snapTimer)
+          snapTimer = setTimeout(snapToNearest, 150)
+          return
+        }
+        const p = st.progress
+        if (p <= 0.001 || p >= 0.999) return
+        const nearest = points.reduce((a, b) =>
+          Math.abs(b - p) < Math.abs(a - p) ? b : a,
+        )
+        const targetY = st.start + nearest * (st.end - st.start)
+        if (Math.abs(window.scrollY - targetY) < 2) return
+        if (lenis) {
+          lenis.scrollTo(targetY, {
+            duration: 0.9,
+            easing: (t) => 1 - Math.pow(1 - t, 3),
+          })
+        } else {
+          window.scrollTo({ top: targetY, behavior: 'smooth' })
+        }
+      }
 
       scrollTrigger = ScrollTrigger.create({
         trigger: container,
@@ -46,6 +83,8 @@ export default function ScrollScrubVideo({
             video.currentTime = time
           }
           onProgressRef.current?.(self.progress)
+          clearTimeout(snapTimer)
+          snapTimer = setTimeout(snapToNearest, 220)
         },
       })
     }
@@ -89,9 +128,10 @@ export default function ScrollScrubVideo({
 
     return () => {
       video.removeEventListener('loadedmetadata', handleLoadedMetadata)
+      clearTimeout(snapTimer)
       scrollTrigger?.kill()
     }
-  }, [sources, scrollLength])
+  }, [sources, scrollLength, snapPoints])
 
   return (
     <section ref={containerRef} className={`scroll-scrub ${className}`}>

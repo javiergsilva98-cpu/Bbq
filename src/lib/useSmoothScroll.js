@@ -10,6 +10,13 @@ gsap.registerPlugin(ScrollTrigger)
 // causing the pinned hero to jump. This tells it to ignore those.
 ScrollTrigger.config({ ignoreMobileResize: true })
 
+// The live Lenis instance, so other modules (e.g. scroll snapping) can
+// animate the scroll through Lenis instead of fighting it.
+let activeLenis = null
+export function getLenis() {
+  return activeLenis
+}
+
 /**
  * Wires Lenis smooth scroll into GSAP's ticker/ScrollTrigger so pinned,
  * scrubbed animations stay in sync with the (smoothed) scroll position
@@ -22,6 +29,7 @@ export function useSmoothScroll() {
       smoothWheel: true,
       syncTouch: false,
     })
+    activeLenis = lenis
 
     lenis.on('scroll', ScrollTrigger.update)
 
@@ -34,6 +42,7 @@ export function useSmoothScroll() {
     return () => {
       gsap.ticker.remove(tickerCallback)
       lenis.destroy()
+      activeLenis = null
     }
   }, [])
 }
