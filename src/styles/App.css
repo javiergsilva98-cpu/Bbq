@@ -21,16 +21,42 @@
   height: 100lvh;
   width: 100%;
   overflow: hidden;
-  background: #000;
+  /* Sharp poster painted behind the <video>. iOS clears the video's own
+     poster attribute the moment we seek (scrub) and shows black if it
+     can't decode the frame (e.g. Low Power Mode) — this CSS layer is
+     never cleared, so there's always a real image instead of black. */
+  background: #120b08 url('/video/hero-poster.jpg') center / cover no-repeat;
 }
 
 .scroll-scrub__video {
   position: absolute;
   inset: 0;
+  z-index: 1;
   width: 100%;
   height: 100%;
   object-fit: cover;
   filter: saturate(1.05) contrast(1.05);
+}
+
+/* Wide screens: the video is vertical (9:16), so object-fit: cover on a
+   landscape viewport crops most of it away. Instead letterbox it in a
+   centered column over a blurred, darkened copy of itself. */
+@media (min-aspect-ratio: 1/1) {
+  .scroll-scrub__stage {
+    background: #120b08;
+  }
+  .scroll-scrub__stage::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    background: url('/video/hero-poster.jpg') center / cover no-repeat;
+    filter: blur(48px) brightness(0.4) saturate(1.1);
+    transform: scale(1.15);
+  }
+  .scroll-scrub__video {
+    object-fit: contain;
+  }
 }
 
 /* Legibility scrim: subtle at the edges, stronger behind the center where
@@ -39,6 +65,7 @@
   content: '';
   position: absolute;
   inset: 0;
+  z-index: 2;
   background:
     radial-gradient(
       ellipse 90% 45% at 50% 36%,
@@ -59,7 +86,7 @@
 .scroll-scrub__overlay {
   position: absolute;
   inset: 0;
-  z-index: 2;
+  z-index: 3;
   padding: var(--section-padding);
 }
 
