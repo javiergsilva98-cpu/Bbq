@@ -1,0 +1,23 @@
+{
+  "name": "BBQ Gonsastrez",
+  "short_name": "BBQ Gonsastrez",
+  "description": "BBQ en Canencia. Nos vamos a poner las botas 🔥",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#120b08",
+  "theme_color": "#120b08",
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}
