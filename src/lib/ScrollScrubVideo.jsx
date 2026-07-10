@@ -46,13 +46,12 @@ export default function ScrollScrubVideo({
         const points = snapPointsRef.current
         if (!st || !points?.length) return
         const lenis = getLenis()
-        // Still gliding fast — check again shortly instead of yanking the
-        // scroll away mid-glide. Threshold ~0.5px/frame: at that speed the
-        // remaining drift is negligible, so we can start the snap early
-        // instead of waiting out the whole inertia tail.
-        if (lenis && Math.abs(lenis.velocity) > 0.5) {
+        // Only defer while the glide is still clearly moving — the snap
+        // takes over the tail end of the inertia so glide and magnet read
+        // as one continuous motion instead of stop-wait-snap.
+        if (lenis && Math.abs(lenis.velocity) > 1.5) {
           clearTimeout(snapTimer)
-          snapTimer = setTimeout(snapToNearest, 80)
+          snapTimer = setTimeout(snapToNearest, 50)
           return
         }
         const p = st.progress
@@ -65,8 +64,8 @@ export default function ScrollScrubVideo({
         if (dist < 2) return
         if (lenis) {
           lenis.scrollTo(targetY, {
-            // Short hops settle quickly, long pulls stay smooth.
-            duration: Math.min(0.8, Math.max(0.35, dist / 1500)),
+            // Fast enough that the 24fps video reads as motion, not steps.
+            duration: Math.min(0.5, Math.max(0.25, dist / 2500)),
             easing: (t) => 1 - Math.pow(1 - t, 3),
           })
         } else {
@@ -88,7 +87,7 @@ export default function ScrollScrubVideo({
           }
           onProgressRef.current?.(self.progress)
           clearTimeout(snapTimer)
-          snapTimer = setTimeout(snapToNearest, 120)
+          snapTimer = setTimeout(snapToNearest, 70)
         },
       })
     }
