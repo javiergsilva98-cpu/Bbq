@@ -55,7 +55,6 @@ export default function HeroScrub() {
       onProgress={handleProgress}
     >
       <div ref={titleRef} className="hero__scene">
-        <p className="hero__eyebrow">Sierra Norte de Madrid</p>
         <h1 className="hero__title">
           BBQ en <em>Canencia</em>
         </h1>
