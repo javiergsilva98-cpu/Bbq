@@ -72,8 +72,12 @@ export default function ScrollScrubVideo({
         const lenis = getLenis()
         if (lenis) {
           lenis.scrollTo(targetY, {
-            duration: Math.min(0.5, Math.max(0.25, dist / 2500)),
-            easing: (t) => 1 - Math.pow(1 - t, 3),
+            // Longer, gentler glide — the 60fps video absorbs the slower
+            // motion without stepping, so the magnet can feel unhurried.
+            duration: Math.min(1.1, Math.max(0.55, dist / 1400)),
+            // easeInOutCubic: soft departure and soft arrival, no snap.
+            easing: (t) =>
+              t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2,
           })
         } else {
           window.scrollTo({ top: targetY, behavior: 'smooth' })
