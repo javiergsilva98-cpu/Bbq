@@ -65,7 +65,7 @@ export default function HeroScrub() {
         { src: '/video/hero-bbq.webm', type: 'video/webm' },
       ]}
       poster="/video/hero-poster.jpg"
-      scrollLength="450%"
+      scrollLength="260%"
       onProgress={handleProgress}
       snapPoints={SNAP_POINTS}
     >
