@@ -44,18 +44,32 @@ export default function ScrollScrubVideo({
       })
     }
 
+    // iOS/Android Safari won't let JS scrub currentTime reliably until the
+    // video has actually started decoding once — a muted play()+immediate
+    // pause() "primes" it. Without this, mobile browsers just show the
+    // first/last frame and skip everything in between.
+    const primeForScrubbing = async () => {
+      try {
+        await video.play()
+        video.pause()
+      } catch {
+        // Autoplay blocked — scrubbing may still kick in once the user
+        // interacts with the page (scroll counts as a gesture on most).
+      }
+    }
+
     const handleLoadedMetadata = () => {
       // Some mp4 encodes report duration: Infinity until forced to seek once.
       if (!isFinite(video.duration)) {
         const forceDurationFix = () => {
           video.removeEventListener('timeupdate', forceDurationFix)
           video.currentTime = 0
-          createScrollTrigger()
+          primeForScrubbing().then(createScrollTrigger)
         }
         video.addEventListener('timeupdate', forceDurationFix)
         video.currentTime = 1e10
       } else {
-        createScrollTrigger()
+        primeForScrubbing().then(createScrollTrigger)
       }
     }
 
@@ -81,6 +95,7 @@ export default function ScrollScrubVideo({
           className="scroll-scrub__video"
           muted
           playsInline
+          webkit-playsinline="true"
           preload="auto"
         >
           {sources.map((source) => (
