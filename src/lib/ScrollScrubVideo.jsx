@@ -33,6 +33,16 @@ export default function ScrollScrubVideo({
 
     let scrollTrigger
     let snapTimer
+    let touchActive = false
+    const onTouchStart = () => {
+      touchActive = true
+    }
+    const onTouchEnd = () => {
+      touchActive = false
+    }
+    window.addEventListener('touchstart', onTouchStart, { passive: true })
+    window.addEventListener('touchend', onTouchEnd, { passive: true })
+    window.addEventListener('touchcancel', onTouchEnd, { passive: true })
 
     const createScrollTrigger = () => {
       const duration = video.duration
@@ -45,13 +55,10 @@ export default function ScrollScrubVideo({
         const st = scrollTrigger
         const points = snapPointsRef.current
         if (!st || !points?.length) return
-        const lenis = getLenis()
-        // Only defer while the glide is still clearly moving — the snap
-        // takes over the tail end of the inertia so glide and magnet read
-        // as one continuous motion instead of stop-wait-snap.
-        if (lenis && Math.abs(lenis.velocity) > 1.5) {
+        // Finger still on screen (slow deliberate drag) — never fight it.
+        if (touchActive) {
           clearTimeout(snapTimer)
-          snapTimer = setTimeout(snapToNearest, 50)
+          snapTimer = setTimeout(snapToNearest, 100)
           return
         }
         const p = st.progress
@@ -62,9 +69,9 @@ export default function ScrollScrubVideo({
         const targetY = st.start + nearest * (st.end - st.start)
         const dist = Math.abs(window.scrollY - targetY)
         if (dist < 2) return
+        const lenis = getLenis()
         if (lenis) {
           lenis.scrollTo(targetY, {
-            // Fast enough that the 24fps video reads as motion, not steps.
             duration: Math.min(0.5, Math.max(0.25, dist / 2500)),
             easing: (t) => 1 - Math.pow(1 - t, 3),
           })
@@ -72,6 +79,13 @@ export default function ScrollScrubVideo({
           window.scrollTo({ top: targetY, behavior: 'smooth' })
         }
       }
+
+      // Stillness detection by actual position, not velocity: iOS native
+      // momentum ends with a ~1px/frame crawl whose every tick would keep
+      // resetting a naive "did scroll stop?" timer, delaying the magnet by
+      // up to a second. Sub-3px ticks don't count as movement, so the snap
+      // takes over the moment the glide stops being perceptible.
+      let lastSnapY = -1
 
       scrollTrigger = ScrollTrigger.create({
         trigger: container,
@@ -86,8 +100,12 @@ export default function ScrollScrubVideo({
             video.currentTime = time
           }
           onProgressRef.current?.(self.progress)
-          clearTimeout(snapTimer)
-          snapTimer = setTimeout(snapToNearest, 70)
+          const y = window.scrollY
+          if (Math.abs(y - lastSnapY) > 3) {
+            lastSnapY = y
+            clearTimeout(snapTimer)
+            snapTimer = setTimeout(snapToNearest, 70)
+          }
         },
       })
     }
@@ -131,6 +149,9 @@ export default function ScrollScrubVideo({
 
     return () => {
       video.removeEventListener('loadedmetadata', handleLoadedMetadata)
+      window.removeEventListener('touchstart', onTouchStart)
+      window.removeEventListener('touchend', onTouchEnd)
+      window.removeEventListener('touchcancel', onTouchEnd)
       clearTimeout(snapTimer)
       scrollTrigger?.kill()
     }
