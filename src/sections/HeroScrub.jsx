@@ -61,6 +61,7 @@ export default function HeroScrub() {
         { src: '/video/hero-bbq.mp4', type: 'video/mp4' },
         { src: '/video/hero-bbq.webm', type: 'video/webm' },
       ]}
+      poster="/video/hero-poster.jpg"
       scrollLength="450%"
       onProgress={handleProgress}
     >

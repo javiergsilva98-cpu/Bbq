@@ -11,6 +11,7 @@ gsap.registerPlugin(ScrollTrigger)
  */
 export default function ScrollScrubVideo({
   sources,
+  poster,
   scrollLength = '300%',
   className = '',
   onProgress,
@@ -102,6 +103,7 @@ export default function ScrollScrubVideo({
           playsInline
           webkit-playsinline="true"
           preload="auto"
+          poster={poster}
         >
           {sources.map((source) => (
             <source key={source.src} src={source.src} type={source.type} />
