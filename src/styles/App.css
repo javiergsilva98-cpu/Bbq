@@ -7,11 +7,13 @@
 .scroll-scrub {
   position: relative;
   height: 300vh; /* scroll distance driving the video timeline */
+  height: 300svh;
 }
 
 .scroll-scrub__stage {
   position: relative;
   height: 100vh;
+  height: 100svh; /* stable on mobile: doesn't jump when the address bar hides/shows */
   width: 100%;
   overflow: hidden;
   background: #000;
@@ -96,6 +98,7 @@
   position: relative;
   padding: var(--section-padding);
   min-height: 100vh;
+  min-height: 100svh;
   display: flex;
   flex-direction: column;
   justify-content: center;

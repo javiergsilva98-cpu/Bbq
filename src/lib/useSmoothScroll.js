@@ -5,6 +5,11 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger'
 
 gsap.registerPlugin(ScrollTrigger)
 
+// The address bar hiding/showing on mobile fires resize events that would
+// otherwise make ScrollTrigger recalculate pin distances mid-scroll,
+// causing the pinned hero to jump. This tells it to ignore those.
+ScrollTrigger.config({ ignoreMobileResize: true })
+
 /**
  * Wires Lenis smooth scroll into GSAP's ticker/ScrollTrigger so pinned,
  * scrubbed animations stay in sync with the (smoothed) scroll position
