@@ -25,7 +25,7 @@
      poster attribute the moment we seek (scrub) and shows black if it
      can't decode the frame (e.g. Low Power Mode) — this CSS layer is
      never cleared, so there's always a real image instead of black. */
-  background: #120b08 url('/video/hero-poster.jpg') center / cover no-repeat;
+  background: #120b08 url('/video/hero-poster-v2.jpg') center / cover no-repeat;
 }
 
 .scroll-scrub__video {
@@ -50,7 +50,7 @@
     position: absolute;
     inset: 0;
     z-index: 0;
-    background: url('/video/hero-poster.jpg') center / cover no-repeat;
+    background: url('/video/hero-poster-v2.jpg') center / cover no-repeat;
     filter: blur(48px) brightness(0.4) saturate(1.1);
     transform: scale(1.15);
   }

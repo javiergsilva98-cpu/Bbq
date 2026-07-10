@@ -59,12 +59,13 @@ export default function HeroScrub() {
   return (
     <ScrollScrubVideo
       sources={[
-        // mp4 first: it's the highest-bitrate encode and every modern
-        // browser plays H.264 — webm is only a fallback.
-        { src: '/video/hero-bbq.mp4', type: 'video/mp4' },
-        { src: '/video/hero-bbq.webm', type: 'video/webm' },
+        // Single H.264 mp4, no B-frames — plays and scrubs reliably on
+        // every modern browser. A VP9 webm fallback was dropped because
+        // Chrome preferred it and its alt-ref frames broke seeking, the
+        // same failure B-frames caused on iOS.
+        { src: '/video/hero-v2.mp4', type: 'video/mp4' },
       ]}
-      poster="/video/hero-poster.jpg"
+      poster="/video/hero-poster-v2.jpg"
       scrollLength="200%"
       onProgress={handleProgress}
       snapPoints={SNAP_POINTS}
