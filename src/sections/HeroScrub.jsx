@@ -87,24 +87,26 @@ export default function HeroScrub() {
       </div>
 
       <div ref={finaleRef} className="hero__scene hero__scene--hidden hero__scene--finale">
-        <p className="hero__caption">Ayúdanos a que no falte ni una 🍺</p>
-        <div className="hero__actions">
-          <a
-            className="hero__cta"
-            href={BURGER_URL}
-            target="_blank"
-            rel="noreferrer"
-          >
-            Elegir mi burger y bebida
-          </a>
-          <a
-            className="hero__cta hero__cta--ghost"
-            href={MAPS_URL}
-            target="_blank"
-            rel="noreferrer"
-          >
-            Cómo llegar
-          </a>
+        <div className="hero__finale-block">
+          <p className="hero__caption">Ayúdanos a que no falte ni una 🍺</p>
+          <div className="hero__actions">
+            <a
+              className="hero__cta"
+              href={BURGER_URL}
+              target="_blank"
+              rel="noreferrer"
+            >
+              Elegir mi burger y bebida
+            </a>
+            <a
+              className="hero__cta hero__cta--ghost"
+              href={MAPS_URL}
+              target="_blank"
+              rel="noreferrer"
+            >
+              Cómo llegar
+            </a>
+          </div>
         </div>
         <a
           className="hero__signature"
