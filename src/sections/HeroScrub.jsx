@@ -3,6 +3,7 @@ import gsap from 'gsap'
 import ScrollScrubVideo from '../lib/ScrollScrubVideo.jsx'
 
 const MAPS_URL = 'https://maps.app.goo.gl/mby1ioZjPMrW7xSG6'
+const BURGER_URL = 'https://bbq-canencia.lovable.app/'
 const INSTAGRAM_URL = 'https://www.instagram.com/gonsastrez/'
 
 // 0 below `from`, 1 above `to`, eased in between — for mapping scroll
@@ -66,14 +67,24 @@ export default function HeroScrub() {
       </div>
 
       <div ref={finaleRef} className="hero__scene hero__scene--hidden">
-        <a
-          className="hero__cta"
-          href={MAPS_URL}
-          target="_blank"
-          rel="noreferrer"
-        >
-          Cómo llegar
-        </a>
+        <div className="hero__actions">
+          <a
+            className="hero__cta"
+            href={BURGER_URL}
+            target="_blank"
+            rel="noreferrer"
+          >
+            Elegir mi burger
+          </a>
+          <a
+            className="hero__cta hero__cta--ghost"
+            href={MAPS_URL}
+            target="_blank"
+            rel="noreferrer"
+          >
+            Cómo llegar
+          </a>
+        </div>
         <a
           className="hero__signature"
           href={INSTAGRAM_URL}
