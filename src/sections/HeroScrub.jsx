@@ -9,6 +9,17 @@ const INSTAGRAM_URL = 'https://www.instagram.com/gonsastrez/'
 // Scroll-progress centers of each text scene — where the snap magnet rests.
 const SNAP_POINTS = [0, 0.39, 0.7, 1]
 
+// Module constants (stable identities) so ScrollScrubVideo's effect deps
+// never change across re-renders and it doesn't tear down/rebuild the
+// ScrollTrigger (which would reload the video and jump the scroll).
+const VIDEO_SOURCES = [
+  // Single H.264 mp4, no B-frames — plays and scrubs reliably on every
+  // modern browser. A VP9 webm fallback was dropped because Chrome
+  // preferred it and its alt-ref frames broke seeking, the same failure
+  // B-frames caused on iOS.
+  { src: '/video/hero-v2.mp4', type: 'video/mp4' },
+]
+
 // 0 below `from`, 1 above `to`, eased in between — for mapping scroll
 // progress ranges onto opacity without hard cuts.
 function fade(progress, from, to) {
@@ -58,13 +69,7 @@ export default function HeroScrub() {
 
   return (
     <ScrollScrubVideo
-      sources={[
-        // Single H.264 mp4, no B-frames — plays and scrubs reliably on
-        // every modern browser. A VP9 webm fallback was dropped because
-        // Chrome preferred it and its alt-ref frames broke seeking, the
-        // same failure B-frames caused on iOS.
-        { src: '/video/hero-v2.mp4', type: 'video/mp4' },
-      ]}
+      sources={VIDEO_SOURCES}
       poster="/video/hero-poster-v2.jpg"
       scrollLength="200%"
       onProgress={handleProgress}

@@ -1,11 +1,8 @@
 :root {
   --color-bg: #120b08;
-  --color-bg-alt: #1c110a;
   --color-ember: #ff6a1a;
   --color-amber: #ffb347;
-  --color-ash: #c9beb3;
   --color-cream: #f4ead9;
-  --color-smoke: #4a3c33;
 
   --font-display: 'Fraunces', 'Georgia', serif;
   --font-body: 'Work Sans', 'Helvetica Neue', sans-serif;
