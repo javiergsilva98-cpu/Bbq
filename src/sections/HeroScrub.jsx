@@ -56,8 +56,10 @@ export default function HeroScrub() {
   return (
     <ScrollScrubVideo
       sources={[
-        { src: '/video/hero-bbq.webm', type: 'video/webm' },
+        // mp4 first: it's the highest-bitrate encode and every modern
+        // browser plays H.264 — webm is only a fallback.
         { src: '/video/hero-bbq.mp4', type: 'video/mp4' },
+        { src: '/video/hero-bbq.webm', type: 'video/webm' },
       ]}
       scrollLength="450%"
       onProgress={handleProgress}
