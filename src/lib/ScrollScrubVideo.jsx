@@ -13,10 +13,13 @@ export default function ScrollScrubVideo({
   sources,
   scrollLength = '300%',
   className = '',
+  onProgress,
   children,
 }) {
   const containerRef = useRef(null)
   const videoRef = useRef(null)
+  const onProgressRef = useRef(onProgress)
+  onProgressRef.current = onProgress
 
   useEffect(() => {
     const video = videoRef.current
@@ -35,11 +38,13 @@ export default function ScrollScrubVideo({
         end: `+=${scrollLength}`,
         pin: true,
         scrub: 0.5,
+        anticipatePin: 1,
         onUpdate: (self) => {
           const time = self.progress * duration
           if (!Number.isNaN(time)) {
             video.currentTime = time
           }
+          onProgressRef.current?.(self.progress)
         },
       })
     }
