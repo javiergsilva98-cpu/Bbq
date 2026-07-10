@@ -16,31 +16,38 @@ function fade(progress, from, to) {
 /**
  * The whole invitation happens over the pinned video:
  *   scene 1 (start)  — "BBQ en Canencia"
- *   scene 2 (middle) — the date, as the grill opens
- *   scene 3 (end)    — "Cómo llegar" + @gonsastrez, and it stays
+ *   scene 2          — the date, as the grill opens
+ *   scene 3          — pool reminder: bring a swimsuit
+ *   scene 4 (end)    — burger/drink picker + "Cómo llegar" + @gonsastrez
  */
 export default function HeroScrub() {
   const titleRef = useRef(null)
   const dateRef = useRef(null)
+  const poolRef = useRef(null)
   const finaleRef = useRef(null)
   const cueRef = useRef(null)
 
   const handleProgress = useCallback((p) => {
-    const titleOpacity = 1 - fade(p, 0.08, 0.24)
-    const dateOpacity = fade(p, 0.3, 0.42) * (1 - fade(p, 0.58, 0.7))
-    const finaleOpacity = fade(p, 0.78, 0.92)
+    const titleOpacity = 1 - fade(p, 0.08, 0.2)
+    const dateOpacity = fade(p, 0.24, 0.34) * (1 - fade(p, 0.44, 0.54))
+    const poolOpacity = fade(p, 0.56, 0.66) * (1 - fade(p, 0.74, 0.82))
+    const finaleOpacity = fade(p, 0.85, 0.95)
 
     gsap.set(titleRef.current, {
       opacity: titleOpacity,
-      y: -30 * fade(p, 0.08, 0.24),
+      y: -30 * fade(p, 0.08, 0.2),
     })
     gsap.set(dateRef.current, {
       opacity: dateOpacity,
-      y: 24 * (1 - fade(p, 0.3, 0.42)),
+      y: 24 * (1 - fade(p, 0.24, 0.34)),
+    })
+    gsap.set(poolRef.current, {
+      opacity: poolOpacity,
+      y: 24 * (1 - fade(p, 0.56, 0.66)),
     })
     gsap.set(finaleRef.current, {
       opacity: finaleOpacity,
-      y: 24 * (1 - fade(p, 0.78, 0.92)),
+      y: 24 * (1 - fade(p, 0.85, 0.95)),
       pointerEvents: finaleOpacity > 0.5 ? 'auto' : 'none',
     })
     gsap.set(cueRef.current, { opacity: (1 - fade(p, 0.02, 0.1)) * 0.7 })
@@ -52,7 +59,7 @@ export default function HeroScrub() {
         { src: '/video/hero-bbq.webm', type: 'video/webm' },
         { src: '/video/hero-bbq.mp4', type: 'video/mp4' },
       ]}
-      scrollLength="350%"
+      scrollLength="450%"
       onProgress={handleProgress}
     >
       <div ref={titleRef} className="hero__scene">
@@ -66,7 +73,13 @@ export default function HeroScrub() {
         <p className="hero__date">19.07.2026</p>
       </div>
 
+      <div ref={poolRef} className="hero__scene hero__scene--hidden">
+        <p className="hero__date-label">Hay piscina 💦</p>
+        <p className="hero__pool">No te olvides del bañador</p>
+      </div>
+
       <div ref={finaleRef} className="hero__scene hero__scene--hidden">
+        <p className="hero__caption">Ayúdanos a que no falte ni una 🍺</p>
         <div className="hero__actions">
           <a
             className="hero__cta"
@@ -74,7 +87,7 @@ export default function HeroScrub() {
             target="_blank"
             rel="noreferrer"
           >
-            Elegir mi burger
+            Elegir mi burger y bebida
           </a>
           <a
             className="hero__cta hero__cta--ghost"
