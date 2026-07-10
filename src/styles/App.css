@@ -111,6 +111,21 @@
   opacity: 0;
 }
 
+/* Finale: caption + buttons sit low (lower third), and @gonsastrez is
+   pinned to the very bottom of the screen. */
+.hero__scene--finale {
+  justify-content: flex-end;
+  padding-bottom: clamp(6rem, 24svh, 13rem);
+}
+
+.hero__scene--finale .hero__signature {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: max(1.75rem, env(safe-area-inset-bottom, 0px));
+  margin-top: 0;
+}
+
 .hero__title {
   font-size: clamp(2.75rem, 11vw, 6.5rem);
   color: var(--color-cream);

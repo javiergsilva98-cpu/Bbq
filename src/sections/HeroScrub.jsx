@@ -86,7 +86,7 @@ export default function HeroScrub() {
         <p className="hero__pool">No te olvides del bañador</p>
       </div>
 
-      <div ref={finaleRef} className="hero__scene hero__scene--hidden">
+      <div ref={finaleRef} className="hero__scene hero__scene--hidden hero__scene--finale">
         <p className="hero__caption">Ayúdanos a que no falte ni una 🍺</p>
         <div className="hero__actions">
           <a
